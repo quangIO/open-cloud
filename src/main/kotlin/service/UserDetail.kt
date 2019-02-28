@@ -17,6 +17,7 @@ private val verifier = JWT.require(algorithm).build()
 private const val USERNAME = "username"
 
 private val logger = LoggerFactory.getLogger("user-detail")
+
 data class UserDetail(val username: String) {
   fun toJWT() = JWT.create()
     .withClaim(USERNAME, username)
@@ -25,7 +26,7 @@ data class UserDetail(val username: String) {
 }
 
 fun RoutingContext.getUserDetail(): UserDetail = try {
-  val decoded = verifier.verify(this.request().getHeader(HttpHeaders.AUTHORIZATION))
+  val decoded = verifier.verify(request().getHeader(HttpHeaders.AUTHORIZATION))
   UserDetail(decoded.getClaim(USERNAME).asString())
 } catch (e: Exception) {
   response()

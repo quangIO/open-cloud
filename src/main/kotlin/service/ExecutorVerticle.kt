@@ -16,9 +16,19 @@ private val engine = Engine.create()
 private val sourceCache = Caffeine.newBuilder()
   .maximumSize(10000)
   .expireAfterWrite(5, TimeUnit.MINUTES)
-  // .refreshAfterWrite(1, TimeUnit.MINUTES)
-  .build<String, Source>()
+  .refreshAfterWrite(1, TimeUnit.MINUTES)
+  .build(::getSource)
 
+
+private fun getSource(sourceId: String): Source? {
+  val file = File(uploadDir, sourceId)
+
+  if (!file.isFile)
+    return null
+
+  val fileType = SourceType.toIso(sourceId.takeLastWhile { it != '.' })
+  return Source.newBuilder(fileType, file).build()
+}
 class ExecutorVerticle : CoroutineVerticle() {
   override suspend fun start() {
     vertx.eventBus().localConsumer<FunctionRequest>(Events.REQUEST_CODE) {
@@ -27,15 +37,9 @@ class ExecutorVerticle : CoroutineVerticle() {
     }
   }
 
-  private fun getSource(sourceId: String): Source {
-    val fileType = SourceType.toIso(sourceId.takeLastWhile { it != '.' })
-    return sourceCache.get(sourceId) {
-      Source.newBuilder(fileType, File(uploadDir, sourceId)).build()
-    } ?: throw Exception()
-  }
 
   private fun execute(request: FunctionRequest): String {
-    val source = getSource(request.sourceId)
+    val source = sourceCache[request.sourceId]
     Context.newBuilder().engine(engine).build().use { context ->
       return context.eval(source).toString()
     }
