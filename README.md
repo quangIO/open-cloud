@@ -1,6 +1,6 @@
 ## Goal
 
-This is an attemp to make a polyglot, minimal configure web server
+This is an attemp to make a polyglot web server with minimal configuration
 
 ## Getting Started
 
@@ -18,12 +18,15 @@ TODO
 * [ ] Support running WebAssembly (with Asmble, WAVM?)
 * [x] Simple POST, GET
 * [ ] Functions interaction
-* [ ] Share state between functions
+* [ ] Share state between functions (support sessions,...)
 * [ ] Predefined common components
 ## Performance
 
-Speed is acceptable I guess. This is the micro-benchmark
+Speed is acceptable I guess. This is a micro-benchmark
 
 TODO
 ## Contributing
 Open issues if you have any question and please tell me if you actually use this to build something.
+
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=C44YKYMVNL4TA)

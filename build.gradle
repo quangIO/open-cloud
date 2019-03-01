@@ -23,7 +23,7 @@ repositories {
 
 dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-  implementation "org.graalvm:graal-sdk:0.30"
+  implementation "org.graalvm:graal-sdk:1.0.0-rc7"
   implementation "io.vertx:vertx-web"
   implementation "io.vertx:vertx-lang-kotlin"
   implementation "io.vertx:vertx-lang-kotlin-coroutines"
@@ -35,7 +35,12 @@ dependencies {
 }
 
 compileKotlin {
-  kotlinOptions.jvmTarget = "1.8"
+  kotlinOptions {
+    jvmTarget = "1.8"
+    freeCompilerArgs = [
+      "-Xallow-result-return-type"
+    ]
+  }
 }
 compileTestKotlin {
   kotlinOptions.jvmTarget = "1.8"

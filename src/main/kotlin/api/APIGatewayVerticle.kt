@@ -46,7 +46,7 @@ class APIGatewayVerticle : CoroutineVerticle() {
         val reply = it.result().body()
         with(context.response()) {
           reply.headers.forEach { (v, k) -> putHeader(v, k) }
-          end(reply.response)
+          setStatusCode(reply.statusCode).end(reply.response)
         }
       }
     }
