@@ -38,8 +38,7 @@ class ExecutorVerticle : CoroutineVerticle() {
       message.reply(execute(request).getOrElse {
         logger.warn(it.cause)
         FunctionReply("Internal Server Error", hashMapOf(), 500)
-      }
-      )
+      })
     }
   }
 
@@ -50,18 +49,13 @@ class ExecutorVerticle : CoroutineVerticle() {
     }
     val source = sourceCache[request.sourceId]
     return try {
-      val binding = context.polyglotBindings
-      binding.putMember("request", request)
+      val reply = FunctionReply()
+      with(context.polyglotBindings) {
+        putMember("request", request)
+        putMember("response", reply)
+      }
       context.eval(source)
-
-      val response = binding
-        .getMember("response")
-        .asString()
-      val headers = binding
-        .getMember("header")
-        ?.asHostObject<Map<String, String>>() ?: mapOf()
-      val statusCode = binding.getMember("status")?.asInt() ?: 200
-      Result.success(FunctionReply(response, headers, statusCode))
+      Result.success(reply)
     } catch (e: Exception) {
       Result.failure(e)
     }

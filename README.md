@@ -14,12 +14,17 @@ TODO
 
 ## Features
 
-* [x] Support Java, R, Python, JavaScript, Ruby, and LLVM (this is unsafe when running GraalVM CE edition)
+* [x] Support JVM languages, R, Python, JavaScript, Ruby, and LLVM (executing LLVM is unsafe when using GraalVM CE)
 * [ ] Support running WebAssembly (with Asmble, WAVM?)
 * [x] Simple POST, GET
 * [ ] Functions interaction
 * [ ] Share state between functions (support sessions,...)
-* [ ] Predefined common components
+* [ ] Predefined common components (rate-limiting, authentication...)
+* [ ] Horizontal scale
+* [ ] Dashboard
+
+_(Help needed)_
+
 ## Performance
 
 Speed is acceptable I guess. This is a micro-benchmark
@@ -27,6 +32,5 @@ Speed is acceptable I guess. This is a micro-benchmark
 TODO
 ## Contributing
 Open issues if you have any question and please tell me if you actually use this to build something.
-
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=C44YKYMVNL4TA)

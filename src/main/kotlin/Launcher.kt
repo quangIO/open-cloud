@@ -18,7 +18,3 @@ class Launcher : CoroutineVerticle() {
     }
   }
 }
-
-fun main() {
-  Vertx.vertx().deployVerticle(Launcher())
-}

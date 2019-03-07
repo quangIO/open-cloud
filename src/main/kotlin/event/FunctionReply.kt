@@ -1,7 +1,7 @@
 package event
 
 data class FunctionReply(
-  val response: String,
-  val headers: Map<String, String> = mapOf(),
-  val statusCode: Int = 200
+  @JvmField var response: String = "",
+  @JvmField var headers: Map<String, String> = mapOf(),
+  @JvmField var statusCode: Int = 200
 )
