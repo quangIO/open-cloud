@@ -47,7 +47,7 @@ compileTestKotlin {
 }
 
 vertx {
-  mainVerticle = "Main"
+  mainVerticle = "Launcher"
   vertxVersion = "3.6.3"
 }
 

@@ -12,11 +12,13 @@ import io.vertx.core.logging.LoggerFactory
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.ext.web.handler.CorsHandler
+import io.vertx.ext.web.handler.StaticHandler
 import io.vertx.kotlin.core.http.listenAwait
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import service.getUserDetail
 import util.EnvConfig.port
 import util.EnvConfig.uploadDir
+import java.net.InetAddress
 
 private val logger = LoggerFactory.getLogger("api-gateway-server")
 
@@ -27,7 +29,7 @@ class APIGatewayVerticle : CoroutineVerticle() {
     vertx.createHttpServer()
       .requestHandler(router)
       .listenAwait(port)
-    logger.info("Server started on port $port")
+    logger.info("Server started on port ${InetAddress.getLocalHost().hostName}:$port")
   }
 
   private fun createRouter() = Router.router(vertx).apply {
@@ -35,6 +37,7 @@ class APIGatewayVerticle : CoroutineVerticle() {
       .registerDefaultCodec(FunctionRequest::class.java, NaiveCodec<FunctionRequest>("func-req"))
       .registerDefaultCodec(FunctionReply::class.java, NaiveCodec<FunctionReply>("func-rep"))
     route()
+      .handler(StaticHandler.create())
       .handler(BodyHandler.create(uploadDir))
       .handler(CorsHandler.create("*"))
 
@@ -52,17 +55,15 @@ class APIGatewayVerticle : CoroutineVerticle() {
     }
 
     post("/upload").handler { context ->
-      val user = context.getUserDetail()
+      // val user = context.getUserDetail()
       val fileSystem = context.vertx().fileSystem()
       context.fileUploads().forEach { file ->
         fileSystem.move(
-          file.uploadedFileName(), "$user|${System.currentTimeMillis()}" +
+          file.uploadedFileName(), "${System.currentTimeMillis()}" +
             ".${file.fileName().split(".").last()}"
-        ) {
-          context.response().setChunked(true).end(if (it.failed()) "FAILED" else "OK")
-        }
+        ) {}
       }
-      context.response().end()
+      context.response().end("OK")
     }
   }
 }
