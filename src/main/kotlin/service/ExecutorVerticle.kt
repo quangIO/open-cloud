@@ -33,12 +33,18 @@ private fun getSource(sourceId: String): Source? {
 
 class ExecutorVerticle : CoroutineVerticle() {
   override suspend fun start() {
-    vertx.eventBus().localConsumer<FunctionRequest>(Events.REQUEST_CODE) { message ->
-      val request = message.body()
-      message.reply(execute(request).getOrElse {
-        logger.warn(it.cause)
-        FunctionReply("Internal Server Error", hashMapOf(), 500)
-      })
+    vertx.eventBus().apply {
+      localConsumer<FunctionRequest>(Events.REQUEST_CODE) { message ->
+        val request = message.body()
+        message.reply(execute(request).getOrElse {
+          logger.warn(it.cause)
+          FunctionReply("Internal Server Error", hashMapOf(), 500)
+        })
+      }
+      localConsumer<String>(Events.EVICT_CACHE_ITEM) { message ->
+        sourceCache.invalidate(message)
+        // TODO: use refresh instead
+      }
     }
   }
 

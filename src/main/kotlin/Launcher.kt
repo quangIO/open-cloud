@@ -3,6 +3,7 @@ import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import service.ExecutorVerticle
+import service.FileWatcherVerticle
 
 class Launcher : CoroutineVerticle() {
   override suspend fun start() {
@@ -15,6 +16,9 @@ class Launcher : CoroutineVerticle() {
           .setWorkerPoolName("executor-worker")
       )
       deployVerticle(APIGatewayVerticle())
+
+      if (System.getenv("NORELOAD") == null)
+        deployVerticle(FileWatcherVerticle())
     }
   }
 }
